@@ -96,6 +96,9 @@
 
 <script>
   import axios from "axios";
+  import * as SockJS from 'sockjs-client';
+  import * as Stomp from 'stompjs';  
+
   export default {
       name: 'HomePanel',
     data () {
@@ -172,5 +175,16 @@
     //  console.log("Round id: " + window.localStorage.getItem("idRound"));
     },
   },
+
+    mounted() {
+      var socket = new SockJS("http://localhost:8080/gs-websockets");
+      var stompClient = Stomp.over(socket);
+      stompClient.connect({}, frame => {
+        stompClient.subscribe("/websockets", message => {
+            alert(message.body);
+        });
+      });
+    }
+
   }
 </script>
